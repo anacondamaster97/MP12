@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # name: free-job # Don't use 'name', use 'generateName'
+  generateName: free-job- # Kubernetes will append random chars
+  namespace: free-service # Run this job in the 'free-service' namespace
+spec:
+  template: # Pod template
+    spec:
+      containers:
+      - name: classifier-container # Name of the container within the pod
+        image: yourdockerhubusername/mp12-classifier:latest # Your image!
+        env: # Environment variables for this job
+        - name: DATASET
+          value: "mnist"
+        - name: TYPE
+          value: "ff"
+        resources: # Resource requests and limits for this container
+          requests:
+            cpu: "900m" # Request 0.9 CPU
+            # memory: "512Mi" # Optional: Request memory
+          limits:
+            cpu: "900m" # Limit to 0.9 CPU (900 millicores)
+            # memory: "1Gi"   # Optional: Limit memory
+      restartPolicy: Never # Jobs shouldn't restart automatically if they fail/complete
+  backoffLimit: 4 # Optional: How many times to retry the job if it fails

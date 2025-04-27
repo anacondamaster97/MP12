@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # name: premium-job # Don't use 'name', use 'generateName'
+  generateName: premium-job- # Kubernetes will append random chars
+  namespace: default # Run this job in the 'default' namespace
+spec:
+  template: # Pod template
+    spec:
+      containers:
+      - name: classifier-container
+        image: yourdockerhubusername/mp12-classifier:latest # Your image!
+        env:
+        - name: DATASET
+          value: "kmnist" # Use kmnist for premium
+        - name: TYPE
+          value: "cnn"    # Use cnn for premium
+        resources:
+          requests:
+            cpu: "900m"
+            # memory: "1Gi" # CNN might need more memory
+          limits:
+            cpu: "900m" # Still limited to 0.9 CPU per job
+            # memory: "2Gi"
+      restartPolicy: Never
+  backoffLimit: 4
