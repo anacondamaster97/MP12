@@ -5,12 +5,21 @@ from torch.autograd import Variable
 import time
 import sys
 from utils import get_dataset, get_model, train_model, save_model
+import argparse
+
 
 def main():
     start_time = time.time()
-    dataset_name = os.environ["DATASET"]
-    model_name = os.environ["TYPE"]
-    print("dataset:", dataset_name)
+    parser = argparse.ArgumentParser(description='Train Model')
+    parser.add_argument('--dataset', type=str, required=True, choices=['mnist', 'kmnist'])
+    parser.add_argument('--type', type=str, required=True, choices=['ff', 'cnn'])
+    args = parser.parse_args()
+
+    # --- Use parsed args ---
+    dataset_name = args.dataset
+    model_name = args.type
+    print(f"Training model: dataset='{dataset_name}', type='{model_name}'") # Optional: for logging
+
 
     input_size = 784  # The image size = 28 x 28 = 784
     hidden_size = 500  # The number of nodes at the hidden layer
